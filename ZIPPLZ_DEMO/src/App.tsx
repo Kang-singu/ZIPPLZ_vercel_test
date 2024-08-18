@@ -98,6 +98,7 @@ const App = () => {
         let npLoader = new npyjs();
         const npArray = await npLoader.load(tensorFile);
         const tensor = new ort.Tensor(dType, npArray.data, npArray.shape);
+        console.log("model on");
         return tensor;
     };
 
