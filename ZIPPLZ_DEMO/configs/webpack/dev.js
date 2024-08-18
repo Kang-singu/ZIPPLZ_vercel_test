@@ -18,7 +18,7 @@ module.exports = merge(commonConfig, {
     // multithreading. 
     headers: {
       "Cross-Origin-Opener-Policy": "same-origin",
-      "Cross-Origin-Embedder-Policy": "credentialless",
+      "Cross-Origin-Embedder-Policy": "require-corp",
     },
   },
   devtool: "cheap-module-source-map",
