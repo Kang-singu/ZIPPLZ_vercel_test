@@ -40,7 +40,7 @@ const ImageChange = () => {
     );
 };
 
-// const IMAGE_EMBEDDING = "/assets/data/ssafy1_embedding.npy";
+const IMAGE_EMBEDDING = "/assets/data/ssafy1_embedding.npy";
 const MODEL_DIR = "/model/sam_onnx_example.onnx";
 
 const App = () => {
@@ -85,21 +85,21 @@ const App = () => {
         };
         initModel();
 
-        // // EMBEDDING MODEL LOAD 시
-        // // Load the Segment Anything pre-computed embedding
-        // Promise.resolve(loadNpyTensor(IMAGE_EMBEDDING, "float32")).then(
-        //     (embedding) => setTensor(embedding)
-        // );
+        // EMBEDDING MODEL LOAD 시
+        // Load the Segment Anything pre-computed embedding
+        Promise.resolve(loadNpyTensor(IMAGE_EMBEDDING, "float32")).then(
+            (embedding) => setTensor(embedding)
+        );
     }, []);
 
-    // // EMDEDDING MODEL LOAD 시
-    // // Decode a Numpy file into a tensor.
-    // const loadNpyTensor = async (tensorFile: string, dType: string) => {
-    //     let npLoader = new npyjs();
-    //     const npArray = await npLoader.load(tensorFile);
-    //     const tensor = new ort.Tensor(dType, npArray.data, npArray.shape);
-    //     return tensor;
-    // };
+    // EMDEDDING MODEL LOAD 시
+    // Decode a Numpy file into a tensor.
+    const loadNpyTensor = async (tensorFile: string, dType: string) => {
+        let npLoader = new npyjs();
+        const npArray = await npLoader.load(tensorFile);
+        const tensor = new ort.Tensor(dType, npArray.data, npArray.shape);
+        return tensor;
+    };
 
     // Handle file input change
     const handleOriginalFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -128,56 +128,56 @@ const App = () => {
                 setImage(img);
                 setOriginalImage(img);
 
-                // EMBEDDING MODEL LOAD 시
-                embeddingImageAPI(file);
+                // // EMBEDDING MODEL LOAD 시
+                // embeddingImageAPI(file);
             };
         } catch (error) {
             console.log(error);
         }
     };
 
-    // EMBEDDING MODEL LOAD 시
-    const embeddingImageAPI = async (file: File) => {
-        const formData = new FormData();
-        formData.append("file", file);
+    // // EMBEDDING MODEL LOAD 시
+    // const embeddingImageAPI = async (file: File) => {
+    //     const formData = new FormData();
+    //     formData.append("file", file);
 
-        try {
-            console.log("Embedding API request 요청 ... ");
-            const response = await fetch("https://zipplz.site/ai/segment", {
-                method: "POST",
-                body: formData,
-                // mode: 'no-cors'
-            });
+    //     try {
+    //         console.log("Embedding API request 요청 ... ");
+    //         const response = await fetch("https://zipplz.site/ai/segment", {
+    //             method: "POST",
+    //             body: formData,
+    //             // mode: 'no-cors'
+    //         });
 
-            if (!response.ok) {
-                throw new Error("Embedding API request failed");
-            }
-            console.log("Embedding API response 완료 !!!");
-            const data = await response.json();
+    //         if (!response.ok) {
+    //             throw new Error("Embedding API request failed");
+    //         }
+    //         console.log("Embedding API response 완료 !!!");
+    //         const data = await response.json();
 
-            const { embedding, shape } = data;
-            const embedding_img = await loadNpyTensor(
-                embedding,
-                shape,
-                "float32"
-            );
-            setTensor(embedding_img);
-        } catch (error) {
-            console.error("Error calling Embedding API:", error);
-        }
-    };
+    //         const { embedding, shape } = data;
+    //         const embedding_img = await loadNpyTensor(
+    //             embedding,
+    //             shape,
+    //             "float32"
+    //         );
+    //         setTensor(embedding_img);
+    //     } catch (error) {
+    //         console.error("Error calling Embedding API:", error);
+    //     }
+    // };
 
-    // EMBEDDING MODEL LOAD 시
-    // Decode a Numpy file into a tensor.
-    const loadNpyTensor = async (
-        data: number[],
-        shape: number[],
-        dType: string
-    ) => {
-        const tensorData = new Float32Array(data);
-        const tensor = new ort.Tensor(dType, tensorData, shape);
-        return tensor;
-    };
+    // // EMBEDDING MODEL LOAD 시
+    // // Decode a Numpy file into a tensor.
+    // const loadNpyTensor = async (
+    //     data: number[],
+    //     shape: number[],
+    //     dType: string
+    // ) => {
+    //     const tensorData = new Float32Array(data);
+    //     const tensor = new ort.Tensor(dType, tensorData, shape);
+    //     return tensor;
+    // };
 
     // Run the ONNX model every time clicks has changed
     useEffect(() => {
@@ -294,7 +294,8 @@ const App = () => {
 
         try {
             console.log("Editing API request 요청 ... ");
-            const response = await fetch("https://zipplz.site/ai/editing", {
+            // const response = await fetch("https://zipplz.site/ai/editing", {
+            const response = await fetch("http://localhost:5001/ai/editing", {
                 method: "POST",
                 body: formData,
             });
@@ -396,7 +397,8 @@ const App = () => {
         try {
             console.log("saveImage API request 요청 ... ");
             return await axios.post(
-                `https://zipplz.site/api/materials`,
+                // `https://zipplz.site/api/materials`,
+                `http://localhost:5000/api/materials`,
                 formData,
                 {
                     headers: {
